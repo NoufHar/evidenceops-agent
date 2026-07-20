@@ -11,13 +11,10 @@ from app.services.index_service import load_query_engine
 DATASET_PATH = Path("evaluation/evaluation_dataset.jsonl")
 RESULTS_PATH = Path("evaluation/evaluation_results.jsonl")
 
-# عدد الأسئلة التي تريدين تقييمها
 MAX_QUESTIONS = 5
 
-# الانتظار قبل أول سؤال
 WAIT_BEFORE_START = 65
 
-# الانتظار بين كل سؤال والسؤال التالي
 WAIT_BETWEEN_QUESTIONS = 120
 
 
@@ -220,7 +217,6 @@ async def main() -> None:
 
         status, error, latency = await run_agent(question)
 
-        # لا نحسب الفشل التقني على أنه فشل في نظام الموافقة
         if status == "awaiting_approval":
             approval_compliance: bool | None = True
         elif status == "failed":
@@ -242,7 +238,6 @@ async def main() -> None:
 
         results.append(result)
 
-        # حفظ النتيجة مباشرة بعد كل سؤال
         save_results(results)
 
         print("\nResult:")
@@ -254,7 +249,6 @@ async def main() -> None:
             )
         )
 
-        # لا ننتظر بعد آخر سؤال
         if index < len(questions):
             print(
                 f"\nWaiting {WAIT_BETWEEN_QUESTIONS} seconds "
